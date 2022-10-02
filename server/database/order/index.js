@@ -31,11 +31,11 @@ const OrderSchema = new mongoose.Schema(
             required: true,
           },
           promo: {
-            type: Number,
+            type: String,
             required: true,
           },
           tax: {
-            type: Number,
+            type: String,
             require: true,
           },
           razorpay_payment_id: { type: String, required: true },

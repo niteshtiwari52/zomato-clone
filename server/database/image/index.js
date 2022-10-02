@@ -11,4 +11,4 @@ const ImageSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const ImageModel = mongoose.model("images".ImageSchema);
+export const ImageModel = mongoose.model("images", ImageSchema);

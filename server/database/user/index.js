@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
+import bcrypt, { genSalt } from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const UserSchema = new mongoose.Schema(
   {
-    fullName: { type: String, required: true },
+    fullname: { type: String, required: true },
     email: { type: String, requried: true },
     password: { type: String },
     // use only at the time of order
@@ -15,12 +17,58 @@ const UserSchema = new mongoose.Schema(
 );
 
 // Attachments
-UserSchema.methods.generateJwtToken = function () {};
+UserSchema.methods.generateJwtToken = function () {
+  return jwt.sign({ user: this._id.toString() }, process.env.JWT_SECRET_KEY);
+};
 
 // helper functions
 
-UserSchema.statics.findByEmailAndPhone = async () => {};
+UserSchema.statics.findByEmailAndPhone = async ({ email, phoneNumber }) => {
+  const checkUserByEmail = await UserModel.findOne({ email });
+  const checkUserByPhone = await UserModel.findOne({ phoneNumber });
 
-UserSchema.statics.findeByEmailAndPassword = async () => {};
+  if (checkUserByEmail || checkUserByPhone) {
+    throw new Error("User already Exists....");
+  }
+};
+
+UserSchema.statics.findeByEmailAndPassword = async ({ email, password }) => {
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    throw new Error("User does not Exists.... !");
+  }
+
+  // compare password
+  const doesPasswordMatch = await bcrypt.compare(password, user.password);
+
+  if (!doesPasswordMatch) {
+    throw new Error("Invalid Credentials !!!");
+  }
+
+  return user;
+};
+
+UserSchema.pre("save", function (next) {
+  // gives the data of current user
+  const user = this;
+
+  //password is modified
+  if (!user.isModified("password")) return next();
+
+  //generate bcrypt salt
+  bcrypt.genSalt(8, (error, salt) => {
+    if (error) return next(error);
+
+    // hash the password
+    bcrypt.hash(user.password, salt, (error, hash) => {
+      if (error) return next(error);
+
+      // assigning hashed password
+      user.password = hash;
+
+      return next();
+    });
+  });
+});
 
 export const UserModel = mongoose.model("users", UserSchema);
