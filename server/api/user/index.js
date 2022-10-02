@@ -1,6 +1,7 @@
 import express from "express";
 import passport from "passport";
 import { UserModel } from "../../database/allModels";
+import { validateId } from "../../validation/common.validation";
 
 const Router = express.Router();
 
@@ -66,7 +67,9 @@ Router.put(
   async (req, res) => {
     try {
       const { _id } = req.params;
+      await validateId(req.params);
       const { userData } = req.body;
+
       userData.password = undefined;
 
       const updateUserData = await UserModel.findByIdAndUpdate(
