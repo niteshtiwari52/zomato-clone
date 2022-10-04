@@ -5,6 +5,7 @@ import session from "express-session";
 
 // Provite route authirization config
 import privateRouteConfig from "./config/route.config";
+import googleAuthConfig from "./config/google.config";
 
 // Database connection
 import ConnectDB from "./database/connection";
@@ -17,9 +18,11 @@ import User from "./api/user";
 import Menu from "./api/menu";
 import Order from "./api/order";
 import Review from "./api/review";
+import Image from "./api/image";
 
 dotenv.config();
 privateRouteConfig(passport);
+googleAuthConfig(passport);
 const app = express();
 const PORT = 4000;
 
@@ -50,6 +53,7 @@ app.use("/api/v1/user", User);
 app.use("/api/v1/menu", Menu);
 app.use("/api/v1/order", Order);
 app.use("/api/v1/review", Review);
+app.use("/api/v1/image", Image);
 
 app.listen(PORT, () => {
   ConnectDB()
