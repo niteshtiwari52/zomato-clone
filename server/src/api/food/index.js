@@ -1,4 +1,10 @@
 import express from "express";
+import {
+  createNewFoodItems,
+  getFoodBasedOnCategory,
+  getFoodBasedOnRestaurant,
+  getFoodById,
+} from "../../controller/food";
 
 import { FoodModel } from "../../database/allModels";
 import {
@@ -9,32 +15,24 @@ import {
 const Router = express.Router();
 
 /**
- * Route     /:_id
+ * Route     http://localhost:4000/api/v1/food/create/newfooditems
  * Des       Create New Food Item
  * Params    none
  * Access    Public
  * Method    POST
  */
 // Homework
+Router.post("/create/newfooditems", createNewFoodItems);
 
 /**
- * Route     /:_id
+ * Route     http://localhost:4000/api/v1/food/:_id
  * Des       Get food based on id
  * Params    _id
  * Access    Public
  * Method    GET
  */
 
-Router.get("/:id", async (req, res) => {
-  try {
-    const { _id } = req.params;
-    await validateId(req.params);
-    const food = FoodModel.findById(_id);
-    return res.json({ food });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
+Router.get("/:_id", getFoodById);
 
 /**
  * Route     /r/:_id
@@ -44,21 +42,7 @@ Router.get("/:id", async (req, res) => {
  * Method    GET
  */
 
-Router.get("/r/:_id", async (req, res) => {
-  try {
-    const { _id } = req.params;
-    await validateId(req.params);
-    const foods = await FoodModel.find({
-      restaurant: _id,
-    });
-    if (!foods) {
-      return res.status(404).json({ error: "No food found" });
-    }
-    return res.json({ foods });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
+Router.get("/r/:_id", getFoodBasedOnRestaurant);
 
 /**
  * Route     /c/:category
@@ -68,23 +52,6 @@ Router.get("/r/:_id", async (req, res) => {
  * Method    GET
  */
 
-Router.get("/c/:category", async (req, res) => {
-  try {
-    const { category } = req.params;
-    await validateCategory(req.params);
-    const foods = await FoodModel.find({
-      category: { $regex: category, $options: "i" },
-    });
-
-    if (!foods) {
-      return res
-        .status(404)
-        .json({ error: `No food matched with ${category}` });
-    }
-    return res.status(200).json({ foods });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
+Router.get("/c/:category", getFoodBasedOnCategory);
 
 export default Router;

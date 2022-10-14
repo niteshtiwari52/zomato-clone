@@ -1,21 +1,22 @@
 import express from "express";
-
-import { RestaurantModel } from "../../database/allModels";
 import {
-  validateRestaurantCity,
-  validateSearchString,
-} from "../../validation/restaurant.validation";
+  addNewRestaurant,
+  getAllRestaurantsByCity,
+  getRestaurantDetailsById,
+  searchRestaurant,
+} from "../../controller/restaurant";
 
 const Router = express.Router();
 
 /**
- * Route     /
+ * Route     /add/new
  * Des       Create new restaurant
  * Params    none
  * Access    Public
  * Method    POST
  */
 // Homework
+Router.post("/add/new", addNewRestaurant);
 
 /**
  * Route     /
@@ -25,43 +26,17 @@ const Router = express.Router();
  * Method    GET
  */
 
-Router.get("/", async (req, res) => {
-  try {
-    // http://localhost:4000/restaurant/?city=ncr
-    const { city } = req.query;
-    await validateRestaurantCity(req.params);
-    const restaurants = await RestaurantModel.find({ city });
-    if (restaurants.length === 0) {
-      return res.status(404).json({ error: "No restraunt found in this city" });
-    }
-    return res.status(200).json({ restaurants });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
+Router.get("/", getAllRestaurantsByCity);
 
 /**
- * Route     /:_id
+ * Route     http://localhost:4000/api/v1/restaurant/:_id
  * Des       Get individual restuarant details based on id
  * Params    _id
  * Access    Public
  * Method    GET
  */
 
-Router.get("/:_id", async (req, res) => {
-  try {
-    const { _id } = req.params;
-    const restaurant = await RestaurantModel.findById(_id);
-
-    if (!restaurant) {
-      return res.status(400).json({ error: "Restaurant not found" });
-    }
-
-    return res.json({ restaurant });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
+Router.get("/:_id", getRestaurantDetailsById);
 
 /**
  * Route     /search/:searchString
@@ -70,33 +45,6 @@ Router.get("/:_id", async (req, res) => {
  * Access    Public
  * Method    GET
  */
-Router.get("/search/:searchString", async (req, res) => {
-  /**
-   * searchString = Raj
-   * results = {
-   *  RajHotel
-   *  RajRow
-   *  RonRaj
-   *  raJRow
-   * }
-   */
-  try {
-    const { searchString } = req.params;
-    await validateSearchString(req.params);
-    const restaurants = await RestaurantModel.find({
-      name: { $regex: searchString, $options: "i" },
-    });
-
-    if (!restaurants.length === 0) {
-      return res
-        .status(404)
-        .json({ error: `No restaurant matched with ${searchString}` });
-    }
-
-    return res.json({ restaurants });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
+Router.get("/search/:searchString", searchRestaurant);
 
 export default Router;

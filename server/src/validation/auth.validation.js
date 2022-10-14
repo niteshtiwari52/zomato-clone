@@ -2,7 +2,7 @@ import joi from "joi";
 
 export const ValidateSignup = (userData) => {
   const Schema = joi.object({
-    fullName: joi.string().required().min(5),
+    fullname: joi.string().required().min(5),
     email: joi.string().email().required(),
     password: joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
     address: joi

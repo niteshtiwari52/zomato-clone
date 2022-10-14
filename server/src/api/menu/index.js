@@ -1,54 +1,26 @@
 import express from "express";
-import { MenuModel, ImageModel } from "../../database/allModels";
+import { getMenuImageListById, getMenuListById } from "../../controller/menu";
 
 const Router = express.Router();
 
 /**
- * Route     /list/:_id
+ * Route     http://localhost:4000/api/v1/menu/list/:_id
  * Des       Get menu based on menu id
  * Params    _id
  * Access    Public
  * Method    GET
  */
 
-Router.get("/list/:id", async (req, res) => {
-  try {
-    const { _id } = req.params;
-    const menus = await MenuModel.findById(_id);
-
-    if (!menus) {
-      return res
-        .status(404)
-        .json({ error: "No Menu Available for this restaurant" });
-    }
-
-    return res.json({ menus });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
+Router.get("/list/:id", getMenuListById);
 
 /**
- * Route     /image/:_id
+ * Route     http://localhost:4000/api/v1/menu/image/:_id
  * Des       Get all list of menu images with id
  * Params    _id
  * Access    Public
  * Method    GET
  */
 
-Router.get("/image/:_id", async (req, res) => {
-  try {
-    const { _id } = req.params;
-
-    const menuImages = await ImageModel.findById(_id);
-
-    if (!menuImages) {
-      return res.status(404).json({ message: "No menu images found" });
-    }
-    return res.status(200).json({ menuImages });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
+Router.get("/image/:_id", getMenuImageListById);
 
 export default Router;

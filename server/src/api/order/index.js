@@ -1,10 +1,11 @@
 import express from "express";
 import passport from "passport";
+import { addNewOrder, getAllOrderByUserId } from "../../controller/order";
 import { OrderModel } from "../../database/allModels";
 const Router = express.Router();
 
 /**
- * Route     /
+ * Route     http://localhost:4000/api/v1/order
  * Des       Get all orders by user id
  * Params    none
  * Access    Private
@@ -13,51 +14,21 @@ const Router = express.Router();
 Router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    try {
-      const { user } = req;
-
-      const getOrders = await OrderModel.findOne({ user: user._id });
-
-      if (!getOrders) {
-        return res.status(400).json({ error: "USer order not found " });
-      }
-
-      return res.status(200).json({ order: getOrders });
-    } catch (error) {
-      return res.status(500).json({ error: error.message });
-    }
-  }
+  getAllOrderByUserId
 );
 
 /**
- * Route    /new
+ * Route    http://localhost:4000/api/v1/order/new
  * Des      Add new Order
  * Params   none
  * Access   Private
- * Method   PUT
+ * Method   PUT or Post
  */
 
 Router.put(
   "/new",
   passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    try {
-      const { user } = req;
-
-      const { orderDetails } = req.body;
-
-      const addNewOrder = await OrderModel.findOneAndUpdate(
-        { user: user._id },
-        { $push: { orderDetails: orderDetails } },
-        { new: true }
-      );
-
-      return req.status(200).json({ order: addNewOrder });
-    } catch (error) {
-      return res.status(500).json({ error: error.message });
-    }
-  }
+  addNewOrder
 );
 
 export default Router;

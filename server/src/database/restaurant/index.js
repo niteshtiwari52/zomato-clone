@@ -7,11 +7,11 @@ const RestaurantSchema = new mongoose.Schema(
     address: { type: String, required: true },
     mapLocation: { type: String, required: true },
     cuisine: [String],
-    retaurantTimings: String,
-    contactNumber: Number,
-    website: String,
+    retaurantTimings: { type: String },
+    contactNumber: { type: Number },
+    website: { type: String },
     popularDishes: [String],
-    averageCost: Number,
+    averageCost: { type: Number },
     amenties: [String],
     menuImages: {
       type: mongoose.Types.ObjectId,
@@ -36,3 +36,5 @@ const RestaurantSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+export const RestaurantModel = mongoose.model("restaurant", RestaurantSchema);

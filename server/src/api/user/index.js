@@ -1,61 +1,36 @@
 import express from "express";
 import passport from "passport";
-import { UserModel } from "../../database/allModels";
-import { validateId } from "../../validation/common.validation";
+import {
+  updateUserDetails,
+  viewProfile,
+  viewPublicProfile,
+} from "../../controller/user";
 
 const Router = express.Router();
 
 /**
  * Route     /
- * Des       Get Authorized user data
+ * Des       Get Authorized user data/view profile
  * Params    none
  * Access    Private
  * Method    GET
  */
 
-Router.get(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    try {
-      const { email, fullName, phoneNumber, address } = req.user;
+Router.get("/", passport.authenticate("jwt", { session: false }), viewProfile);
 
-      return res.json({ user: { email, fullName, phoneNumber, address } });
-    } catch (error) {
-      return res.status(500).json({
-        error: error.message,
-      });
-    }
-  }
-);
-
-/**
+/**.
  * Route     /:id
- * Des       Get user data( For the review)
+ * Des       Get user data( For the review) / viewPublicProfile
  * Params    _id
  * Access    Public
  * Method    GET
  */
 
-Router.get("/:_id", async (req, res) => {
-  try {
-    const { _id } = req.params;
-
-    const getUser = await UserModel.findById(_id);
-    if (!getUser) {
-      return res.status(404).json({ error: "User Not Found" });
-    }
-    const { fullname } = getUser;
-
-    return res.status(200).json({ user: { fullname } });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
+Router.get("/:_id", viewPublicProfile);
 
 /**
  * Route     /:id
- * Des       Update user data
+ * Des       Update user details
  * Params    _id
  * Access    Private
  * Method    PUT
@@ -64,26 +39,7 @@ Router.get("/:_id", async (req, res) => {
 Router.put(
   "/update/:_id",
   passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    try {
-      const { _id } = req.params;
-      await validateId(req.params);
-      const { userData } = req.body;
-
-      userData.password = undefined;
-
-      const updateUserData = await UserModel.findByIdAndUpdate(
-        _id,
-        { $set: userData },
-        { new: true }
-      );
-      console.log(updateUserData);
-
-      return res.status(200).json({ user: updateUserData });
-    } catch (error) {
-      return res.status(500).json({ error: error.message });
-    }
-  }
+  updateUserDetails
 );
 
 export default Router;

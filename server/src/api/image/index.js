@@ -5,6 +5,11 @@ import multer from "multer";
 import { ImageModel } from "../../database/allModels";
 
 import { s3Upload } from "../../utils/s3";
+import {
+  getImageDetails,
+  uploadMultipleImagesInS3Bucket,
+  uploadSingleImageInS3Bucket,
+} from "../../controller/image";
 
 const Router = express.Router();
 
@@ -19,77 +24,25 @@ const upload = multer({ storage });
  * Access    Public
  * Method    GET
  */
-Router.get("/:_id", async (req, res) => {
-  try {
-    const image = await ImageModel.findById(req.params._id);
-
-    return res.status(200).json({ image });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
+Router.get("/:_id", getImageDetails);
 
 /**
- * Route     /
+ * Route     http://localhost:4000/api/v1/image/upload/single
  * Des      Upload given image to s3 bucket and save file link to mongoDb
  * Params    _id
  * Access    Public
  * Method    POST
  */
-Router.post("/", upload.single("file"), async (req, res) => {
-  try {
-    const file = req.file;
+Router.post(
+  "/upload/single",
+  upload.single("file"),
+  uploadSingleImageInS3Bucket
+);
 
-    const bucketOptions = {
-      Bucket: "zomato-clone-zc",
-      Key: file.originalname,
-      Body: file.buffer,
-      ContentType: file.mimetype,
-      ACL: "public-read", //Access control list
-    };
-
-    const uploadImage = await s3Upload(bucketOptions);
-
-    const dbUpload = await ImageModel.create({
-      images: [
-        {
-          location: uploadImage.Location,
-        },
-      ],
-    });
-
-    return res.status(200).json({ dbUpload });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
-
-// Router.post("/", upload.array("file", 4), async (req, res) => {
-//   try {
-//     const file = req.files;
-
-//     const bucketOptions = {
-//       Bucket: "zomato-clone-10567",
-//       Key: file.originalname,
-//       Body: file.buffer,
-//       ContentType: file.mimetype,
-//       ACL: "public-read", // Access Control List
-//     };
-
-//     const uploadImage = await s3Upload(bucketOptions);
-
-//     // const dbUpload = await ImageModel.create({
-//     //   images: [
-//     //     {
-//     //       location: uploadImage.Location,
-//     //     },
-//     //   ],
-//     // });
-
-//     return res.status(200).json({ uploadImage });
-//   } catch (error) {
-//     return res.status(500).json({ error: error.message });
-//   }
-// });
+Router.post(
+  "/upload/multiple",
+  upload.array("file", 4),
+  uploadMultipleImagesInS3Bucket
+);
 
 export default Router;
