@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema(
   {
     fullname: { type: String, required: true },
     email: { type: String, requried: true },
-    password: { type: String, select: false },
+    password: { type: String, required: true, select: false },
     // use only at the time of order
     address: [{ detail: { type: String }, for: { type: String } }],
     phoneNumber: [{ type: Number }],
@@ -32,8 +32,9 @@ UserSchema.statics.findByEmailAndPhone = async ({ email, phoneNumber }) => {
   }
 };
 
-UserSchema.statics.findeByEmailAndPassword = async ({ email, password }) => {
-  const user = await UserModel.findOne({ email });
+UserSchema.statics.findByEmailAndPassword = async ({ email, password }) => {
+  const user = await UserModel.findOne({ email }).select("password");
+
   if (!user) {
     throw new Error("User does not Exists.... !");
   }

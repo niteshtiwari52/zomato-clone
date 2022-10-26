@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import passport from "passport";
 import session from "express-session";
+import cors from "cors";
+import helmet from "helmet";
 
 // Provite route authirization config
 import privateRouteConfig from "./config/route.config";
@@ -28,6 +30,8 @@ const PORT = 4000;
 
 //  adding additional passport configuration
 
+app.use(cors({ origin: "http://localhost:3000" }));
+app.use(helmet());
 app.use(express.json());
 app.use(
   session({

@@ -106,10 +106,11 @@ const LargeTabs = () => {
   return (
     <>
       <div className="hidden lg:flex gap-14 container px-20 my-8 mx-auto">
-        {allTypes.map((item) => (
+        {allTypes.map((item, index) => (
           <>
             <Link key={item.id} to={`/${item.id}`} className="w-36">
               <div
+                key={index}
                 className={classnames(
                   "flex items-center gap-3 pb-2 transition duration-700 ease-in-out",
                   {

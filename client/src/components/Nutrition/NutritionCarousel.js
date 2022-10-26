@@ -67,15 +67,15 @@ const NutritionCarousel = () => {
   return (
     <>
       <div className="lg:hidden grid grid-cols-2 gap-2">
-        {categories.map((item) => (
-          <NutritionCarouselCard {...item} />
+        {categories.map((item, index) => (
+          <NutritionCarouselCard {...item} key={index} />
         ))}
       </div>
       <div className="hidden lg:block">
         <Swiper {...slideConfig}>
-          {categories.map((item) => (
+          {categories.map((item, index) => (
             <SwiperSlide>
-              <NutritionCarouselCard {...item} />
+              <NutritionCarouselCard {...item} key={index} />
             </SwiperSlide>
           ))}
         </Swiper>
