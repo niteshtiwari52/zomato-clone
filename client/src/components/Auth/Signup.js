@@ -2,11 +2,16 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
+// redux
+import { useDispatch } from "react-redux";
+import { signUp } from "../../redux/auth/auth.action";
+import { getMySelf } from "../../redux/User/user.action";
+
 const Signup = ({ isOpen, setIsOpen }) => {
   const [userData, setUserData] = useState({
     email: "",
     password: "",
-    fullName: "",
+    fullname: "",
   });
 
   const handleChange = (e) => {
@@ -17,13 +22,16 @@ const Signup = ({ isOpen, setIsOpen }) => {
     setIsOpen(false);
   };
 
-  const submit = () => {
+  const dispatch = useDispatch();
+  const submit = async () => {
+   await dispatch(signUp(userData));
+   await dispatch(getMySelf());
     closeModal();
-    setUserData({ email: "", password: "", fullName: "" });
+    setUserData({ email: "", password: "", fullname: "" });
   };
 
   const googleSignUp = () =>
-    (window.location.href = "https://localhost:4000/auth/google");
+    (window.location.href = "http://localhost:4000/api/v1/auth/google");
 
   return (
     <>
@@ -67,11 +75,11 @@ const Signup = ({ isOpen, setIsOpen }) => {
 
                     <form className="flex flex-col gap-2">
                       <div className="w-full flex flex-col gap-2">
-                        <label htmlFor="fullName">Full Name</label>
+                        <label htmlFor="fullname">Full Name</label>
                         <input
                           type="text"
-                          id="fullName"
-                          value={userData.fullName}
+                          id="fullname"
+                          value={userData.fullname}
                           onChange={handleChange}
                           placeholder="John Doe"
                           className="w-full border border-gray-400 px-3 py-2 rounded-lg focus:border-zomato-400"

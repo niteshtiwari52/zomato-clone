@@ -9,7 +9,7 @@ import {
 const Router = express.Router();
 
 /**
- * Route     /
+ * Route      http://localhost:4000/api/v1/user
  * Des       Get Authorized user data/view profile
  * Params    none
  * Access    Private
@@ -19,7 +19,7 @@ const Router = express.Router();
 Router.get("/", passport.authenticate("jwt", { session: false }), viewProfile);
 
 /**.
- * Route     /:id
+ * Route     http://localhost:4000/api/v1/user/:id
  * Des       Get user data( For the review) / viewPublicProfile
  * Params    _id
  * Access    Public

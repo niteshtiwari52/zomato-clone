@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema(
   {
     fullname: { type: String, required: true },
     email: { type: String, requried: true },
-    password: { type: String, required: true, select: false },
+    password: { type: String,  select: false },
     // use only at the time of order
     address: [{ detail: { type: String }, for: { type: String } }],
     phoneNumber: [{ type: Number }],

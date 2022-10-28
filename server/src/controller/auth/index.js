@@ -15,9 +15,9 @@ export const signUp = async (req, res) => {
     return res.status(200).json({
       success: true,
       token,
-      newUser,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -43,11 +43,11 @@ export const googleSignIn = passport.authenticate("google", {
 });
 
 export const googleCallback = (req, res) => {
-  return res.status(200).json({
-    token: req.session.passport.user.token,
-  });
+  // return res.status(200).json({
+  //   token: req.session.passport.user.token,
+  // });
 
-  //   return res.redirect(
-  //     `http://localhost:3000/google/${req.session.passport.user.token}`
-  //   );
+    return res.redirect(
+      `http://localhost:3000/google/${req.session.passport.user.token}`
+    );
 };
