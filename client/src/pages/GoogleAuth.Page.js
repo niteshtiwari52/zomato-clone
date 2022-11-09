@@ -3,7 +3,7 @@ import {useParams , useNavigate} from "react-router-dom"
 
 // redux 
 import {useDispatch} from "react-redux"
-import {googleAuth} from  "../redux/auth/auth.action"
+import {googleAuth} from  "../redux/reducers/auth/auth.action"
 
 const GoogleAuth = () => {
   const {token } = useParams();

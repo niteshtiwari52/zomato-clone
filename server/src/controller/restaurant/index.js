@@ -16,7 +16,8 @@ export const getAllRestaurantsByCity = async (req, res) => {
   try {
     // http://localhost:4000/restaurant/?city=ncr
     const { city } = req.query;
-    await validateRestaurantCity(req.params);
+    
+    await validateRestaurantCity(req.query);
     const restaurants = await RestaurantModel.find({ city });
     if (restaurants.length === 0) {
       return res.status(404).json({ error: "No restraunt found in this city" });
@@ -31,8 +32,7 @@ export const getRestaurantDetailsById = async (req, res) => {
   try {
     const { _id } = req.params;
     const restaurant = await RestaurantModel.findById({ _id });
-    console.log(restaurant);
-
+  
     if (!restaurant) {
       return res.status(400).json({ error: "Restaurant not found" });
     }
@@ -55,16 +55,21 @@ export const searchRestaurant = async (req, res) => {
    */
   try {
     const { searchString } = req.params;
-    await validateSearchString(req.params);
+   
+    // await validateSearchString(req.params);
     const restaurants = await RestaurantModel.find({
-      name: { $regex: searchString, $options: "i" },
+      name: { $regex:searchString, $options: "i" },
+      // city: { $regex:searchString, $options: "i" },
+      
     });
-
-    if (!restaurants.length === 0) {
+   
+    if (restaurants.length === 0) {
       return res
         .status(404)
         .json({ error: `No restaurant matched with ${searchString}` });
     }
+
+
 
     return res.json({ restaurants });
   } catch (error) {

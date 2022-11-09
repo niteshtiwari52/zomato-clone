@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TiStarOutline } from "react-icons/ti";
 import { RiDirectionLine, RiShareForwardLine } from "react-icons/ri";
 import { BiBookmarkPlus } from "react-icons/bi";
-// import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 // components
 import Navbar from "../components/Navbar";
@@ -11,38 +11,40 @@ import InfoButton from "../components/Restaurant/InfoButton";
 import RestaurantInfo from "../components/Restaurant/RestaurantInfo";
 import Tabs from "../components/Restaurant/Tabs";
 import CartContainer from "../components/Cart/CartContainer";
+
+// redux
+import { useDispatch } from "react-redux";
+import { getSpecificRestaurant } from "../redux/reducers/restaurant/restaurant.action";
+import { getImage } from "../redux/reducers/image/image.action";
+
 const RestaurantLayout = ({ children: Component, ...props }) => {
-  const [restaurant] = useState({
-    images: [
-      {
-        location:
-          "https://b.zmtcdn.com/data/pictures/chains/8/301718/9386449fd71cc10c9b1007469be4fe10.jpg",
-      },
-      {
-        location:
-          "https://b.zmtcdn.com/data/pictures/chains/8/301718/521b89e0710553cee262e5f0b13efb23.jpg",
-      },
-      {
-        location:
-          "https://b.zmtcdn.com/data/pictures/5/18216915/1cd1d09c0a137b5d8da7a7f7310cd919.jpg",
-      },
-      {
-        location:
-          "https://b.zmtcdn.com/data/pictures/chains/8/301718/521b89e0710553cee262e5f0b13efb23.jpg",
-      },
-      {
-        location:
-          "https://b.zmtcdn.com/data/pictures/5/18216915/1cd1d09c0a137b5d8da7a7f7310cd919.jpg",
-      },
-    ],
-    name: "Biryani Blues",
-    cuisine: ["Biryani", "Kebab", "Desserts"],
-    address: "Connaught Place, New Delhi",
+  const [restaurant, setRestaurant] = useState({
+    images: [],
+    name: "",
+    cuisine: [],
+    address: "",
     restaurantRating: 4.1,
     deliveryRating: 3.2,
   });
 
-  // const { id } = useParams();
+  const dispatch = useDispatch();
+  const { id } = useParams();
+
+  useEffect(() => {
+    dispatch(getSpecificRestaurant(id)).then((data) => {
+      setRestaurant((prev) => ({
+        ...prev,
+        ...data.payload.restaurant,
+      }));
+
+      dispatch(getImage(data.payload.restaurant.photos)).then((data) => {
+        setRestaurant((prev) => ({
+          ...prev,
+          images: data.payload.images,
+        }));
+      });
+    });
+  }, []);
   return (
     <>
       <Navbar />
@@ -74,3 +76,25 @@ const RestaurantLayout = ({ children: Component, ...props }) => {
 };
 
 export default RestaurantLayout;
+
+
+// {
+//   location:
+//     "https://b.zmtcdn.com/data/pictures/chains/8/301718/9386449fd71cc10c9b1007469be4fe10.jpg",
+// },
+// {
+//   location:
+//     "https://b.zmtcdn.com/data/pictures/chains/8/301718/521b89e0710553cee262e5f0b13efb23.jpg",
+// },
+// {
+//   location:
+//     "https://b.zmtcdn.com/data/pictures/5/18216915/1cd1d09c0a137b5d8da7a7f7310cd919.jpg",
+// },
+// {
+//   location:
+//     "https://b.zmtcdn.com/data/pictures/chains/8/301718/521b89e0710553cee262e5f0b13efb23.jpg",
+// },
+// {
+//   location:
+//     "https://b.zmtcdn.com/data/pictures/5/18216915/1cd1d09c0a137b5d8da7a7f7310cd919.jpg",
+// },

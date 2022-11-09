@@ -3,7 +3,7 @@ import { ReviewModel } from "../../database/allModels";
 export const getRestaurantReviewById = async (req, res) => {
   try {
     const { resID } = req.params;
-    const reviews = await ReviewModel.find({ restaurants: resId }).sort({
+    const reviews = await ReviewModel.find({ restaurants: resID }).sort({
       createdAt: -1,
     });
 

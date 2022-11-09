@@ -4,12 +4,12 @@ import { HiLocationMarker } from "react-icons/hi";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 
 import { RiSearch2Line } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // redux
 import { useSelector, useDispatch } from "react-redux";
-import { signOut } from "../../redux/auth/auth.action";
-import { clearUser } from "../../redux/User/user.action";
+import { signOut } from "../../redux/reducers/auth/auth.action";
+import { clearUser } from "../../redux/reducers/User/user.action";
 
 
 // components
@@ -46,11 +46,14 @@ const MobileNav = ({
     <>
       <div className="flex w-full items-center justify-between lg:hidden ">
         <div className=" w-28">
+          <Link to="/">
           <img
             src="https://b.zmtcdn.com/web_assets/b40b97e677bc7b2ca77c58c61db266fe1603954218.png?fit=around|198:42&crop=198:42;*,*"
             alt="logo"
             className=" w-full h-full"
           />
+          </Link>
+
         </div>
         <div className="flex items-center gap-3 relative">
           <button className="bg-zomato-400 text-white py-2 px-3 rounded-full">
@@ -78,9 +81,9 @@ const MobileNav = ({
             <>
               <span
                 onClick={() => setIsDropDownOpen((prev) => !prev)}
-                className="border p-2 border-gray-400 rounded-full"
+                className="border p-2 border-gray-400 rounded-full cursor-pointer"
               >
-                <FaUserAlt className=" w-full h-full" />
+                <FaUserAlt className=" w-full h-full cursor-pointer" />
               </span>
 
               {isDropDownOpen && (
@@ -128,11 +131,13 @@ const LargeNav = ({
       <div className="w-full items-center justify-between hidden lg:flex px-14">
         <div className="flex justify-around items-center gap-4">
           <div className="w-20">
+            <Link to = "/">
             <img
               src="https://b.zmtcdn.com/web_assets/b40b97e677bc7b2ca77c58c61db266fe1603954218.png?fit=around|198:42&crop=198:42;*,*"
               alt="logo"
               className="w-full h-full"
             />
+            </Link>
           </div>
         </div>
 

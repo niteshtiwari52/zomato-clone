@@ -2,9 +2,11 @@ const { MenuModel, ImageModel } = require("../../database/allModels");
 
 exports.getMenuListById = async (req, res) => {
   try {
-    const { _id } = req.params;
-    const menus = await MenuModel.findById(_id);
-
+    
+    const { id } = req.params;
+    
+    const menus = await MenuModel.findById(id);
+   
     if (!menus) {
       return res
         .status(404)

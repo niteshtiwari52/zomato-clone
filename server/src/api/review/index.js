@@ -16,10 +16,10 @@ const Router = express.Router();
  * Method   GET
  */
 
-Router.get("/:resId", getRestaurantReviewById);
+Router.get("/:resID", getRestaurantReviewById);
 
 /**
- * Route    /new
+ * Route    http://localhost:4000/api/v1/review/new
  * Des      Add new food/restaurant review and rating
  * Params   none
  * Access   Private

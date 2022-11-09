@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 // redux
 import { useDispatch } from "react-redux";
-import { getMySelf } from "./redux/User/user.action";
+import { getMySelf } from "./redux/reducers/User/user.action";
 
 // PAges
 import Checkout from "./pages/Checkout.Page";
@@ -20,12 +20,14 @@ import Menu from "./components/Restaurant/Menu";
 import Reviews from "./components/Restaurant/Reviews";
 import Photos from "./components/Restaurant/Photos";
 import RestaurantLayout from "./layouts/Restaurant.layout";
+import { getCart } from "./redux/reducers/cart/cart.action";
 
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getMySelf());
+    dispatch(getCart());
   }, [localStorage]);
   
   return (

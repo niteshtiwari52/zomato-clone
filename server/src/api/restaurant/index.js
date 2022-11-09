@@ -9,13 +9,13 @@ import {
 const Router = express.Router();
 
 /**
- * Route     /add/new
+ * Route     http://localhost:4000/api/v1/restaurant/add/new
  * Des       Create new restaurant
  * Params    none
  * Access    Public
  * Method    POST
  */
-// Homework
+
 Router.post("/add/new", addNewRestaurant);
 
 /**

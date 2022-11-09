@@ -41,7 +41,7 @@ Router.post(
 
 Router.post(
   "/upload/multiple",
-  upload.array("file", 4),
+  upload.array("file", 10),
   uploadMultipleImagesInS3Bucket
 );
 

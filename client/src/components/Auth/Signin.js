@@ -4,8 +4,8 @@ import { FcGoogle } from "react-icons/fc";
 
 // redux
 import { useDispatch } from "react-redux";
-import { signIn } from "../../redux/auth/auth.action";
-import { getMySelf } from "../../redux/User/user.action";
+import { signIn } from "../../redux/reducers/auth/auth.action";
+import { getMySelf } from "../../redux/reducers/User/user.action";
 
 const Signin = ({ isOpen, setIsOpen }) => {
   const [userData, setUserData] = useState({

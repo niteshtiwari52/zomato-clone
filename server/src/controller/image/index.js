@@ -14,7 +14,7 @@ exports.getImageDetails = async (req, res) => {
 exports.uploadSingleImageInS3Bucket = async (req, res) => {
   try {
     const file = req.file;
-
+    
     const bucketOptions = {
       Bucket: "zomato-clone-41022",
       Key: file.originalname,
@@ -42,25 +42,25 @@ exports.uploadSingleImageInS3Bucket = async (req, res) => {
 exports.uploadMultipleImagesInS3Bucket = async (req, res) => {
   try {
     const file = req.files;
-
-    const bucketOptions = {
-      Bucket: "zomato-clone-41022",
-      Key: file.originalname,
-      Body: file.buffer,
-      ContentType: file.mimetype,
-      ACL: "public-read", // Access Control List
-    };
-
-    const uploadImage = await s3Upload(bucketOptions);
-
-    const dbUpload = await ImageModel.create({
-      images: [
-        {
-          location: uploadImage.Location,
-        },
-      ],
+    let multipleImage = [] ;
+   
+   for(let i = 0 ; i < file.length ; i++){   
+      const bucketOptions = {
+        Bucket: "zomato-clone-41022",
+        Key: file[i].originalname,
+        Body: file[i].buffer,
+        ContentType: file[i].mimetype,
+        ACL: "public-read", // Access Control List
+      };
+       multipleImage[i] = await s3Upload(bucketOptions);
+    }     
+    const imageArray =  multipleImage.map((image) => {
+      return {location : image.Location};
     });
-
+    const dbUpload = await ImageModel.create({
+      images: 
+          imageArray,      
+    });
     return res.status(200).json({ dbUpload });
   } catch (error) {
     return res.status(500).json({ error: error.message });
